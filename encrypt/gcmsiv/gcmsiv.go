@@ -1,25 +1,24 @@
-// package encrypt ...
-//
-// UPSTREAM FIX NEEDED -> agl internal [bugfix] fork -> is still api compatible with upstream!
-// [forked] [github.com/agl/gcmsiv] [to fix int overflow crash on 32bit plattforms]
-//
-//	Copyright (c) 2017, Google Inc.
-//
-//	This code was written to support development of BoringSSL and thus is
-//	considered part of BoringSSL and under the same license.
-//
-//	Permission to use, copy, modify, and/or distribute this software for any
-//	purpose with or without fee is hereby granted, provided that the above
-//	copyright notice and this permission notice appear in all copies.
-//
-//	THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//	WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//	MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//	SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//	WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
-//	OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-//	CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
-package encrypt
+// This is a fork of: github/agl/gcmsiv -> github.com/paepckehh/contrib_agl_gcmsiv 
+// To add 32bit (embedded) OS support (int64)
+// 
+/* Copyright (c) 2017, Google Inc.
+ *
+ * This code was written to support development of BoringSSL and thus is
+ * considered part of BoringSSL and under the same license.
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+ * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
+
+package gcmsiv
 
 import (
 	"crypto/aes"
@@ -29,6 +28,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 var verbose = false
@@ -89,6 +89,35 @@ func fieldElementFromBytes(bytes []byte) fieldElement {
 	})
 }
 
+func fieldElementFromSage(varName, in string) fieldElement {
+	var ret fieldElement
+	prefix := varName + "^"
+
+	parts := strings.Split(in, " + ")
+	for _, p := range parts {
+		if p == "1" {
+			ret.set(0)
+			continue
+		}
+		if p == "x" {
+			ret.set(1)
+			continue
+		}
+
+		if !strings.HasPrefix(p, prefix) {
+			panic(fmt.Sprintf("found %q in Sage string, but expected prefix %q", p, prefix))
+		}
+		p = p[len(prefix):]
+		i, err := strconv.Atoi(p)
+		if err != nil {
+			panic(fmt.Sprintf("failed to parse %q in Sage string: %s", p, err))
+		}
+		ret.set(uint(i))
+	}
+
+	return ret
+}
+
 // fitsIn128Bits returns true if the top 128 bits of f are all zero. (And thus
 // the value itself fits in 128 bits.)
 func (f fieldElement) fitsIn128Bits() bool {
@@ -107,7 +136,6 @@ func (f fieldElement) Bytes() (ret [16]byte) {
 	return ret
 }
 
-// SageString ...
 func (f fieldElement) SageString(varName string) string {
 	if !f.fitsIn128Bits() {
 		panic("unsupported")
@@ -130,17 +158,23 @@ func (f fieldElement) SageString(varName string) string {
 	return ret
 }
 
-// String ...
 func (f fieldElement) String() string {
 	if f.fitsIn128Bits() {
 		return fmt.Sprintf("%016x%016x", f[1], f[0])
+	} else {
+		return fmt.Sprintf("%016x%016x%016x%016x",
+			f[3], f[2], f[1], f[0])
 	}
-	return fmt.Sprintf("%016x%016x%016x%016x", f[3], f[2], f[1], f[0])
 }
 
 // coefficient returns the coefficient of x^i in f.
 func (f fieldElement) coefficient(i uint) bool {
 	return (f[(i/64)]>>(i&63))&1 == 1
+}
+
+// set sets the coefficient of x^i, in f, to 1.
+func (f *fieldElement) set(i uint) {
+	f[(i / 64)] |= 1 << (i & 63)
 }
 
 // leftShift returns f times x^i.
@@ -234,31 +268,27 @@ func polyval(hBytes [16]byte, input []byte) [16]byte {
 	return s.Bytes()
 }
 
-// XXX UPSTREAM 32bit plattform fixes
 const (
 	maxPlaintextLen  int64 = 1 << 36
 	maxCiphertextLen int64 = maxPlaintextLen + 16
 	maxADLen         int64 = (1 << 61) - 1
 )
 
-// GCMSIV ...
 type GCMSIV struct {
+	hBytes   [16]byte
 	block    cipher.Block
 	is256Bit bool
 	key      [32]byte
 }
 
-// NonceSize ...
 func (GCMSIV) NonceSize() int {
 	return 16
 }
 
-// Overhead ...
 func (GCMSIV) Overhead() int {
 	return 16
 }
 
-// NewGCMSIV ...
 func NewGCMSIV(key []byte) (*GCMSIV, error) {
 	var block cipher.Block
 	var err error
@@ -341,7 +371,7 @@ func (ctx *GCMSIV) deriveRecordKeys(nonce []byte) (block cipher.Block, hashKey [
 	return block, hashKey
 }
 
-func calculateTag(additionalData, plaintext, nonce []byte, hashKey [16]byte, block cipher.Block) [16]byte {
+func calculateTag(additionalData, plaintext []byte, nonce []byte, hashKey [16]byte, block cipher.Block) [16]byte {
 	input := make([]byte, 0, len(additionalData)+len(plaintext)+48)
 
 	input = append(input, additionalData...)
@@ -361,26 +391,26 @@ func calculateTag(additionalData, plaintext, nonce []byte, hashKey [16]byte, blo
 		log("POLYVAL input", input)
 	}
 
-	ps := polyval(hashKey, input)
+	S_s := polyval(hashKey, input)
 	if verbose {
-		log("POLYVAL result", ps[:])
+		log("POLYVAL result", S_s[:])
 	}
 	for i, b := range nonce {
-		ps[i] ^= b
+		S_s[i] ^= b
 	}
 	if verbose {
-		log("POLYVAL result XOR nonce", ps[:])
+		log("POLYVAL result XOR nonce", S_s[:])
 	}
-	ps[15] &= 0x7f
+	S_s[15] &= 0x7f
 	if verbose {
-		log("... and masked", ps[:])
+		log("... and masked", S_s[:])
 	}
-	block.Encrypt(ps[:], ps[:])
+	block.Encrypt(S_s[:], S_s[:])
 	if verbose {
-		log("Tag", ps[:])
+		log("Tag", S_s[:])
 	}
 
-	return ps
+	return S_s
 }
 
 func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
@@ -391,7 +421,7 @@ func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
 		log("Initial counter", ctrBlock[:])
 	}
 
-	for ctr := binary.LittleEndian.Uint32(ctrBlock[:]); len(src) > 0; ctr++ {
+	for ctr := binary.LittleEndian.Uint32(ctrBlock[:]); len(src) > 0; ctr += 1 {
 		binary.LittleEndian.PutUint32(ctrBlock[:], ctr)
 		block.Encrypt(keystreamBlock[:], ctrBlock[:])
 
@@ -410,7 +440,6 @@ func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
 	return dst
 }
 
-// Seal ...
 func (ctx *GCMSIV) Seal(dst, nonce, plaintext, additionalData []byte) []byte {
 	if verbose {
 		log(fmt.Sprintf("Plaintext (%d bytes)", len(plaintext)), plaintext)
@@ -425,11 +454,11 @@ func (ctx *GCMSIV) Seal(dst, nonce, plaintext, additionalData []byte) []byte {
 		log("Key", key)
 		log("Nonce", nonce)
 	}
-	// XXX
+
 	if int64(len(plaintext)) > maxPlaintextLen {
 		panic("gcmsiv: plaintext too large")
 	}
-	// XXX
+
 	if int64(len(additionalData)) > maxADLen {
 		panic("gcmsiv: additional data too large")
 	}
@@ -445,14 +474,12 @@ func (ctx *GCMSIV) Seal(dst, nonce, plaintext, additionalData []byte) []byte {
 	return dst
 }
 
-// Open ...
 func (ctx GCMSIV) Open(dst, nonce, ciphertext, additionalData []byte) (out []byte, err error) {
-	// XXX
 	if int64(len(additionalData)) > maxADLen {
 		return nil, errors.New("gcmsiv: bad ciphertext length")
 	}
-	// XXX
-	if int64(len(ciphertext)) < 16 || int64(len(ciphertext)) > int64(maxCiphertextLen) {
+
+	if int64(len(ciphertext)) < 16 || int64(len(ciphertext)) > maxCiphertextLen {
 		return nil, errors.New("gcmsiv: bad ciphertext length")
 	}
 

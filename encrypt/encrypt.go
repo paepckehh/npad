@@ -6,6 +6,10 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"errors"
+
+	"paepcke.de/npad/encrypt/gcmsiv"
+	// "github.com/paepckehh/contrib_agl_gcmsiv/v1" 
+	// "github.com/ag/gcmsiv" needs upstream fix for 32 bit (embedded) os plattofrm support 
 )
 
 // Encrypt ...
@@ -17,7 +21,7 @@ func Encrypt(algo string, key [32]byte, iv, data []byte) ([]byte, error) {
 	var x cipher.AEAD
 	switch algo {
 	case "GCMSIV":
-		x, err = NewGCMSIV(key[:])
+		x, err = gcmsiv.NewGCMSIV(key[:])
 	case "AESGCM":
 		e, err := aes.NewCipher(key[:])
 		if err != nil {
@@ -45,7 +49,7 @@ func Decrypt(algo string, key [32]byte, iv, data []byte) ([]byte, error) {
 	var x cipher.AEAD
 	switch algo {
 	case "GCMSIV":
-		x, err = NewGCMSIV(key[:])
+		x, err = gcmsiv.NewGCMSIV(key[:])
 	case "AESGCM":
 		d, err := aes.NewCipher(key[:])
 		if err != nil {
