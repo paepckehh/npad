@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"paepcke.de/npad/compress"
 	"paepcke.de/logsec"
+	"paepcke.de/npad/compress"
 )
 
 //

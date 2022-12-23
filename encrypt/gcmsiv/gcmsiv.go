@@ -1,6 +1,6 @@
-// This is a fork of: github/agl/gcmsiv -> github.com/paepckehh/contrib_agl_gcmsiv 
+// This is a fork of: github/agl/gcmsiv -> github.com/paepckehh/contrib_agl_gcmsiv
 // To add 32bit (embedded) OS support (int64)
-// 
+//
 /* Copyright (c) 2017, Google Inc.
  *
  * This code was written to support development of BoringSSL and thus is
@@ -371,7 +371,7 @@ func (ctx *GCMSIV) deriveRecordKeys(nonce []byte) (block cipher.Block, hashKey [
 	return block, hashKey
 }
 
-func calculateTag(additionalData, plaintext []byte, nonce []byte, hashKey [16]byte, block cipher.Block) [16]byte {
+func calculateTag(additionalData, plaintext, nonce []byte, hashKey [16]byte, block cipher.Block) [16]byte {
 	input := make([]byte, 0, len(additionalData)+len(plaintext)+48)
 
 	input = append(input, additionalData...)

@@ -11,11 +11,11 @@ import (
 	"strings"
 	"time"
 
+	"paepcke.de/certinfo"
+	"paepcke.de/logsec"
 	"paepcke.de/npad/syntax"
 	"paepcke.de/npad/url2svg"
 	"paepcke.de/npad/urlref"
-	"paepcke.de/certinfo"
-	"paepcke.de/logsec"
 	"paepcke.de/reportstyle"
 	"paepcke.de/tlsinfo"
 )

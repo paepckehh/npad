@@ -1,7 +1,7 @@
 // package compress ...
-package compress 
+package compress
 
-// import 
+// import
 import (
 	"bufio"
 	"bytes"
@@ -17,7 +17,7 @@ import (
 	"github.com/klauspost/compress/zstd"
 )
 
-// const 
+// const
 const (
 	_dot   = "."
 	_empty = ""
@@ -26,7 +26,6 @@ const (
 //
 // EXTERNAL INTERFACE
 //
-
 
 // Compress ..
 func Compress(algo string, level int, in []byte) []byte {

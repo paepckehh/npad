@@ -47,11 +47,10 @@ import (
 	"unicode/utf8"
 )
 
-
 // Kind ...
 type Kind uint8
 
-// const 
+// const
 const (
 	Whitespace Kind = iota
 	String
@@ -69,6 +68,7 @@ const (
 )
 
 // Printer ...
+//
 //go:generate gostringer -type=Kind
 type Printer interface {
 	Print(w io.Writer, kind Kind, tokText string) error

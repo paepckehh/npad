@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
+	"paepcke.de/logsec"
 	"paepcke.de/npad/compress"
 	"paepcke.de/npad/encrypt"
-	"paepcke.de/logsec"
 )
 
 //

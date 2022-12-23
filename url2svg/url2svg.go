@@ -1,5 +1,5 @@
 // package url2svg ...
-// 
+//
 // forked from [github.com/aaronarduino/goqrsvg] [boomuler/barcode]
 // This is an package internal minial code size | api stability fork!
 // Please use always the original!
@@ -130,7 +130,6 @@ func (qs *QrSVG) setStartPoint(x, y int) {
 	qs.startingX = x + (qs.blockSize * 4)
 	qs.startingY = y + (qs.blockSize * 4)
 }
-
 
 const charSet string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
 
@@ -1620,8 +1619,7 @@ func IntToRune(i int) rune {
 	return 'F'
 }
 
-
-// const 
+// const
 const (
 	// TypeAztec ...
 	TypeAztec           = "Aztec"
