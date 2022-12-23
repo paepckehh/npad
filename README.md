@@ -7,7 +7,7 @@ WebAPP to share, exchange and analyze secrets, keys, certificates and code in a 
 # KEYPOINTS
 
 - Frontend: 100 % javascript free, secure transport
-= Backend: 100 % pure go code, no cgo, no db, minimal external dependencies, secure storage
+- Backend: 100 % pure go code, no cgo, no db, minimal external dependencies, secure storage 
 
 ## Transport 
 
@@ -32,6 +32,10 @@ WebAPP to share, exchange and analyze secrets, keys, certificates and code in a 
 - No unsafe runtime config files, commandline options or file parser!
 - Details configuration: see server.go 
 - Example configuration: see APP/npad/main.go 
+
+## Anything else?
+
+- Yes, its an quick hack
 
 # CONTRIBUTION
 
