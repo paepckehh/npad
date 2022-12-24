@@ -8,7 +8,7 @@ require (
 	paepcke.de/certinfo v0.0.0-20221224074141-f819d0d07921
 	paepcke.de/logsec v0.0.0-20221223212220-ea87289cad2b
 	paepcke.de/reportstyle v0.0.0-20221220090731-aea5a6894279
-	paepcke.de/tlsinfo v0.0.0-20221222071008-3978a7433b3e
+	paepcke.de/tlsinfo v0.0.0-20221224074627-5f664898a4c6
 )
 
 require (
