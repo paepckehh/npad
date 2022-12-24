@@ -1,6 +1,7 @@
 // This is a fork of: github/agl/gcmsiv -> github.com/paepckehh/contrib_agl_gcmsiv
 // To add 32bit (embedded) OS support (int64)
 //
+
 /* Copyright (c) 2017, Google Inc.
  *
  * This code was written to support development of BoringSSL and thus is
@@ -409,7 +410,7 @@ func calculateTag(additionalData, plaintext, nonce []byte, hashKey [16]byte, blo
 	if verbose {
 		log("... and masked", ps[:])
 	}
-	block.Encrypt(S_s[:], ps[:])
+	block.Encrypt(ps[:], ps[:])
 	if verbose {
 		log("Tag", ps[:])
 	}
