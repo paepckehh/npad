@@ -1,11 +1,12 @@
 module paepcke.de/npad
 
-go 1.18
+go 1.20
 
 require (
 	github.com/klauspost/compress v1.15.13
-	paepcke.de/certinfo v0.0.0-20221222070802-8ac04332b6f8
-	paepcke.de/logsec v0.0.0-20221222070929-23b6bb3362aa
+	mvdan.cc/xurls/v2 v2.4.0
+	paepcke.de/certinfo v0.0.0-20221223191254-9ade24a7f77b
+	paepcke.de/logsec v0.0.0-20221223212220-ea87289cad2b
 	paepcke.de/reportstyle v0.0.0-20221220090731-aea5a6894279
 	paepcke.de/tlsinfo v0.0.0-20221222071008-3978a7433b3e
 )

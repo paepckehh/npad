@@ -274,6 +274,7 @@ const (
 	maxADLen         int64 = (1 << 61) - 1
 )
 
+// GCMSIV ...
 type GCMSIV struct {
 	hBytes   [16]byte
 	block    cipher.Block
@@ -281,14 +282,17 @@ type GCMSIV struct {
 	key      [32]byte
 }
 
+// NonceSize ...
 func (GCMSIV) NonceSize() int {
 	return 16
 }
 
+// Overhead ...
 func (GCMSIV) Overhead() int {
 	return 16
 }
 
+// NewGCMSIV ...
 func NewGCMSIV(key []byte) (*GCMSIV, error) {
 	var block cipher.Block
 	var err error
@@ -391,26 +395,26 @@ func calculateTag(additionalData, plaintext, nonce []byte, hashKey [16]byte, blo
 		log("POLYVAL input", input)
 	}
 
-	S_s := polyval(hashKey, input)
+	ps := polyval(hashKey, input)
 	if verbose {
-		log("POLYVAL result", S_s[:])
+		log("POLYVAL result", ps[:])
 	}
 	for i, b := range nonce {
-		S_s[i] ^= b
+		ps[i] ^= b
 	}
 	if verbose {
-		log("POLYVAL result XOR nonce", S_s[:])
+		log("POLYVAL result XOR nonce", ps[:])
 	}
-	S_s[15] &= 0x7f
+	ps[15] &= 0x7f
 	if verbose {
-		log("... and masked", S_s[:])
+		log("... and masked", ps[:])
 	}
-	block.Encrypt(S_s[:], S_s[:])
+	block.Encrypt(S_s[:], ps[:])
 	if verbose {
-		log("Tag", S_s[:])
+		log("Tag", ps[:])
 	}
 
-	return S_s
+	return ps
 }
 
 func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
@@ -421,7 +425,7 @@ func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
 		log("Initial counter", ctrBlock[:])
 	}
 
-	for ctr := binary.LittleEndian.Uint32(ctrBlock[:]); len(src) > 0; ctr += 1 {
+	for ctr := binary.LittleEndian.Uint32(ctrBlock[:]); len(src) > 0; ctr++ {
 		binary.LittleEndian.PutUint32(ctrBlock[:], ctr)
 		block.Encrypt(keystreamBlock[:], ctrBlock[:])
 
@@ -440,6 +444,7 @@ func cryptBytes(dst, src, initCtr []byte, block cipher.Block) []byte {
 	return dst
 }
 
+// Seal ..
 func (ctx *GCMSIV) Seal(dst, nonce, plaintext, additionalData []byte) []byte {
 	if verbose {
 		log(fmt.Sprintf("Plaintext (%d bytes)", len(plaintext)), plaintext)
@@ -474,6 +479,7 @@ func (ctx *GCMSIV) Seal(dst, nonce, plaintext, additionalData []byte) []byte {
 	return dst
 }
 
+// Open ..
 func (ctx GCMSIV) Open(dst, nonce, ciphertext, additionalData []byte) (out []byte, err error) {
 	if int64(len(additionalData)) > maxADLen {
 		return nil, errors.New("gcmsiv: bad ciphertext length")

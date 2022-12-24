@@ -1,7 +1,5 @@
-// package npad ...
 package npad
 
-// import
 import (
 	"errors"
 	"html"
@@ -11,11 +9,11 @@ import (
 	"strings"
 	"time"
 
+	"mvdan.cc/xurls/v2"
 	"paepcke.de/certinfo"
 	"paepcke.de/logsec"
 	"paepcke.de/npad/syntax"
 	"paepcke.de/npad/url2svg"
-	"paepcke.de/npad/urlref"
 	"paepcke.de/reportstyle"
 	"paepcke.de/tlsinfo"
 )
@@ -24,7 +22,6 @@ import (
 // HTML Page Renderer Engines
 //
 
-// var
 var (
 	certReportHTML = &certinfo.Report{
 		Summary: true,
@@ -43,12 +40,10 @@ var (
 	errExpired = errors.New("paste expired")
 )
 
-// internalServerError ...
 func internalServerError(r http.ResponseWriter) {
 	http.Error(r, "Error: Internal Server Error (500)", http.StatusInternalServerError)
 }
 
-// getStartHTML ...
 func getStartHTML() string {
 	var s strings.Builder
 	s.WriteString(c.i.head1)
@@ -60,7 +55,6 @@ func getStartHTML() string {
 	return s.String()
 }
 
-// getPlainHTML ...
 func getPlainHTML(key string) (string, error) {
 	ts, isExpired := expired(key)
 	if isExpired {
@@ -90,7 +84,6 @@ func getPlainHTML(key string) (string, error) {
 	return s.String(), nil
 }
 
-// getMagicHTML ...
 func getMagicHTML(key string) (string, error) {
 	ts, isExpired := expired(key)
 	if isExpired {
@@ -126,7 +119,7 @@ func getMagicHTML(key string) (string, error) {
 		opt.WriteString(preCSS)
 		opt.WriteString(name)
 		opt.WriteString(syntaxhl(p))
-		opt.WriteString(urlref.GetURL(p, true, true))
+		opt.WriteString(urls(p, true, true))
 		opt.WriteString(endPre)
 	}
 	var s strings.Builder
@@ -140,7 +133,6 @@ func getMagicHTML(key string) (string, error) {
 	return s.String(), nil
 }
 
-// getQRHTML ...
 func getQRHTML(key string, urltarget *url.URL) (string, error) {
 	ts, isExpired := expired(key)
 	if isExpired {
@@ -205,10 +197,9 @@ func getDiagHTMLHeader(q *http.Request) string {
 }
 
 //
-// Plaintex ["curl"] Page Renderer Engine
+// PLAINTEXT ["curl-mode"] Page Renderer Engine
 //
 
-// getPlainText ...
 func getPlainText(key string) (string, error) {
 	p, err := readPaste(key, false)
 	if err != nil {
@@ -217,7 +208,6 @@ func getPlainText(key string) (string, error) {
 	return p, nil
 }
 
-// getDiagText ...
 func getDiagText(q *http.Request) (string, error) {
 	var s strings.Builder
 	s.Grow(4 * 1024)
@@ -226,7 +216,6 @@ func getDiagText(q *http.Request) (string, error) {
 	return s.String(), nil
 }
 
-// getDiagTextHeader ...
 func getDiagTextHeader(q *http.Request) string {
 	var s strings.Builder
 	s.Grow(2 * 1024)
@@ -244,7 +233,7 @@ func getDiagTextHeader(q *http.Request) string {
 }
 
 //
-// Shared Functions
+// SHARED BACKENDS
 //
 
 // syntaxhl wrapper
@@ -268,7 +257,6 @@ func button(key, ts string) string {
 	return s.String()
 }
 
-// expired
 func expired(key string) (string, bool) {
 	ex := "NEVER"
 	isExpired := false
@@ -292,11 +280,74 @@ func expired(key string) (string, bool) {
 	return ex, isExpired
 }
 
+func urls(in string, head, css bool) string {
+	var s strings.Builder
+	parse := xurls.Strict()
+	array := parse.FindAllString(in, -1)
+	uMap := make(map[string]bool)
+	for _, v := range array {
+		uMap[v] = true
+	}
+	uniq := make([]string, len(uMap))
+	for k := range uMap {
+		uniq = append(uniq, k)
+	}
+	sort.Strings(uniq)
+	if len(uniq) > 0 {
+		switch head {
+		case true:
+			s.WriteString("\n<br>\n[url list]")
+		default:
+		}
+		switch css {
+		case true:
+			s.WriteString("\n\t<ol>")
+		default:
+		}
+		for _, e := range uniq {
+			if strings.Contains(e, "w3.org") || strings.Contains(e, "W3.org") || strings.Contains(e, "schema.org") {
+				continue
+			}
+			if len(e) < 4 {
+				continue
+			}
+			if e[:4] != "http" {
+				e = "https://" + e
+			}
+			if len(e) < 5 {
+				continue
+			}
+			if e[:5] == "http:" {
+				e = "https:" + e[5:]
+			}
+			switch css {
+			case true:
+				s.WriteString("\n\t\t<li><a style=\"color:#AAA;text-decoration:none;\"} href=\"")
+				s.WriteString(e)
+				s.WriteString("\" target=\"_blank\" rel=\"noreferrer\">")
+				s.WriteString(e)
+				s.WriteString("</a></li><br>")
+			case false:
+				s.WriteString("<a href=\"")
+				s.WriteString(e)
+				s.WriteString("\" target=\"_blank\" rel=\"noreferrer\">")
+				s.WriteString(e)
+				s.WriteString("</a><br>")
+			}
+		}
+		switch css {
+		case true:
+			s.WriteString("\n\t</ol>")
+		default:
+		}
+	}
+	return s.String()
+}
+
 //
-// Little Helper
+// LITTLE HELPER
 //
 
-// pad ...
 func pad(in string) string {
 	for len(in) < 26 {
 		in = in + _space
@@ -304,7 +355,6 @@ func pad(in string) string {
 	return in
 }
 
-// bad ...
 func bad(in bool) string {
 	if in {
 		return "YES [ALERT]"
