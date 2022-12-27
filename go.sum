@@ -31,5 +31,5 @@ paepcke.de/logsec v0.0.0-20221227072805-7b95b68af1f1 h1:jfUSnGiAUj0J7baHBQYndcDc
 paepcke.de/logsec v0.0.0-20221227072805-7b95b68af1f1/go.mod h1:hlH0hW1cuvG+w9wAIQyiXzXaLA2noUvRU9nTQ3GT1G4=
 paepcke.de/reportstyle v0.0.0-20221227072841-116689571a08 h1:9xbVN7s1wf9OR6ZlfowRUtp6il851ccapkk/jH4k7GE=
 paepcke.de/reportstyle v0.0.0-20221227072841-116689571a08/go.mod h1:n8RawMbFocJ+xICuqY6RAsGgEvOrgAeSXA/Myu5ecPE=
-paepcke.de/tlsinfo v0.0.0-20221227072919-af703d3eff18 h1:erI5VE2bXICZ9wHSpjcfeVCTKZiIogAqO4Rv7Wng6KY=
-paepcke.de/tlsinfo v0.0.0-20221227072919-af703d3eff18/go.mod h1:AfIFrplJwfU9gGuscFzMzqUU37nKvDXQvi9MyCMBWJ0=
+paepcke.de/tlsinfo v0.0.0-20221227174247-1a2038bb4d26 h1:oJDMMqsciRMjREwDXGGgFpWBHc01dYpOECL3xIMCJOo=
+paepcke.de/tlsinfo v0.0.0-20221227174247-1a2038bb4d26/go.mod h1:XbScUBMCwcB4TDMz/nbYwJxnyei05E0+nH30WHB5H3w=
