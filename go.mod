@@ -5,10 +5,10 @@ go 1.20
 require (
 	github.com/klauspost/compress v1.15.13
 	mvdan.cc/xurls/v2 v2.4.0
-	paepcke.de/certinfo v0.0.0-20221224074141-f819d0d07921
-	paepcke.de/logsec v0.0.0-20221224081217-4b3855ea3fca
-	paepcke.de/reportstyle v0.0.0-20221220090731-aea5a6894279
-	paepcke.de/tlsinfo v0.0.0-20221224074627-5f664898a4c6
+	paepcke.de/certinfo v0.0.0-20221227072539-9b9a05628049
+	paepcke.de/logsec v0.0.0-20221227072805-7b95b68af1f1
+	paepcke.de/reportstyle v0.0.0-20221227072841-116689571a08
+	paepcke.de/tlsinfo v0.0.0-20221227072919-af703d3eff18
 )
 
 require (
