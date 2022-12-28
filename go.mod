@@ -6,7 +6,7 @@ require (
 	github.com/klauspost/compress v1.15.13
 	mvdan.cc/xurls/v2 v2.4.0
 	paepcke.de/certinfo v0.1.0
-	paepcke.de/logsec v0.0.0-20221227072805-7b95b68af1f1
+	paepcke.de/logsec v0.1.0
 	paepcke.de/reportstyle v0.1.0
 	paepcke.de/tlsinfo v0.1.0
 )
