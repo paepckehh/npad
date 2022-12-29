@@ -28,7 +28,7 @@ WebAPP to share, exchange and analyze secrets, keys, certificates and code in a 
 
 ## Configuration 
 
-- Build-time type safe configuration only!
+- BUILD TIME CONFIGURATION! Type safe configuration only!
 - No unsafe runtime config files, commandline options or file parser!
 - Details configuration: see server.go 
 - Example configuration: see APP/npad/main.go 
@@ -36,6 +36,7 @@ WebAPP to share, exchange and analyze secrets, keys, certificates and code in a 
 ## Anything else?
 
 - Yes, its an quick hack
+- No pre-build binaries, its build-time-configuration! 
 
 # CONTRIBUTION
 
