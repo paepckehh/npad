@@ -29,12 +29,6 @@ var (
 		PEM:     false,
 		Style:   styleHTML,
 	}
-	certReportText = &certinfo.Report{
-		Summary: true,
-		OpenSSL: true,
-		PEM:     false,
-		Style:   styleText,
-	}
 	styleHTML  = reportstyle.StyleHTML()
 	styleText  = reportstyle.StyleText()
 	errExpired = errors.New("paste expired")
@@ -266,7 +260,8 @@ func expired(key string) (string, bool) {
 			if err != nil {
 				logsec.LogErr <- "expire time ascii -> int convert: [" + err.Error() + "]"
 			}
-			exp := time.Unix(int64(x), 0).Sub(time.Now())
+			// exp := time.Unix(int64(x), 0).Sub(time.Now())
+			exp := time.Until(Unix(int64(x), 0))
 			if exp < 1 {
 				isExpired = true
 			}
@@ -353,11 +348,4 @@ func pad(in string) string {
 		in = in + _space
 	}
 	return in
-}
-
-func bad(in bool) string {
-	if in {
-		return "YES [ALERT]"
-	}
-	return "NO [OK]"
 }
