@@ -42,6 +42,8 @@ import (
 	"sync"
 )
 
+const _empty = ""
+
 //
 // EXTERNAL INTERFACE
 //
@@ -64,7 +66,9 @@ func GetStringSVG(in string) string {
 	}
 	qs := NewQrSVG(qrCode, 5)
 	qs.StartQrSVG(s)
-	qs.WriteQrSVG(s)
+	if err = qs.WriteQrSVG(s); err != nil {
+		return _empty
+	}
 	s.End()
 	out, err := io.ReadAll(&buf)
 	if err != nil {
@@ -276,7 +280,7 @@ const (
 	// Unicode encoding encodes the string as utf-8
 	Unicode
 	// only for testing purpose
-	unknownEncoding
+	// unknownEncoding
 )
 
 func (e Encoding) getEncoder() encodeFn {

@@ -133,7 +133,9 @@ func (p HTMLPrinter) Print(w io.Writer, kind Kind, tokText string) error {
 			if err := p.Print(w, kind, tokText[:i]); err != nil {
 				return err
 			}
-			w.Write([]byte("</li>\n\t\t\t<li>"))
+			if err := w.Write([]byte("</li>\n\t\t\t<li>")); err != nil {
+				return err
+			}
 			if err := p.Print(w, kind, tokText[i+1:]); err != nil {
 				return err
 			}

@@ -29,7 +29,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 var verbose = false
@@ -90,34 +89,34 @@ func fieldElementFromBytes(bytes []byte) fieldElement {
 	})
 }
 
-func fieldElementFromSage(varName, in string) fieldElement {
-	var ret fieldElement
-	prefix := varName + "^"
-
-	parts := strings.Split(in, " + ")
-	for _, p := range parts {
-		if p == "1" {
-			ret.set(0)
-			continue
-		}
-		if p == "x" {
-			ret.set(1)
-			continue
-		}
-
-		if !strings.HasPrefix(p, prefix) {
-			panic(fmt.Sprintf("found %q in Sage string, but expected prefix %q", p, prefix))
-		}
-		p = p[len(prefix):]
-		i, err := strconv.Atoi(p)
-		if err != nil {
-			panic(fmt.Sprintf("failed to parse %q in Sage string: %s", p, err))
-		}
-		ret.set(uint(i))
-	}
-
-	return ret
-}
+// func fieldElementFromSage(varName, in string) fieldElement {
+// 	var ret fieldElement
+// 	prefix := varName + "^"
+//
+// 	parts := strings.Split(in, " + ")
+// 	for _, p := range parts {
+// 		if p == "1" {
+// 			ret.set(0)
+// 			continue
+// 		}
+// 		if p == "x" {
+// 			ret.set(1)
+// 			continue
+// 		}
+//
+// 		if !strings.HasPrefix(p, prefix) {
+// 			panic(fmt.Sprintf("found %q in Sage string, but expected prefix %q", p, prefix))
+// 		}
+// 		p = p[len(prefix):]
+// 		i, err := strconv.Atoi(p)
+// 		if err != nil {
+// 			panic(fmt.Sprintf("failed to parse %q in Sage string: %s", p, err))
+// 		}
+// 		ret.set(uint(i))
+// 	}
+//
+// 	return ret
+// }
 
 // fitsIn128Bits returns true if the top 128 bits of f are all zero. (And thus
 // the value itself fits in 128 bits.)
@@ -277,7 +276,7 @@ const (
 
 // GCMSIV ...
 type GCMSIV struct {
-	hBytes   [16]byte
+	// hBytes   [16]byte
 	block    cipher.Block
 	is256Bit bool
 	key      [32]byte

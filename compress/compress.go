@@ -247,7 +247,10 @@ func compressGO(algo string, level int, data []byte) []byte {
 			errOut("unable to create new gzip writer [" + err.Error() + "]")
 			return nil
 		}
-		w.Write(data)
+		if _, err = w.Write(data); err != nil {
+			errOut("unable to write via gzip writer [" + err.Error() + "]")
+			return nil
+		}
 		w.Close()
 	case "DEFLATE":
 		if level > 9 {
@@ -258,7 +261,10 @@ func compressGO(algo string, level int, data []byte) []byte {
 			errOut("unable to create new deflate writer [" + err.Error() + "]")
 			return nil
 		}
-		w.Write(data)
+		if _, err = w.Write(data); err != nil {
+			errOut("unable to write via deflate writer [" + err.Error() + "]")
+			return nil
+		}
 		w.Close()
 	default:
 		errOut("unsupported compression algo [requested:" + algo + "]")
