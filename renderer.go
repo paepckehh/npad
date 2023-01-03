@@ -261,7 +261,7 @@ func expired(key string) (string, bool) {
 				logsec.LogErr <- "expire time ascii -> int convert: [" + err.Error() + "]"
 			}
 			// exp := time.Unix(int64(x), 0).Sub(time.Now())
-			exp := time.Until(Unix(int64(x), 0))
+			exp := time.Until(time.Unix(int64(x), 0))
 			if exp < 1 {
 				isExpired = true
 			}
