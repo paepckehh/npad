@@ -173,9 +173,9 @@ func (f fieldElement) coefficient(i uint) bool {
 }
 
 // set sets the coefficient of x^i, in f, to 1.
-func (f *fieldElement) set(i uint) {
-	f[(i / 64)] |= 1 << (i & 63)
-}
+// func (f *fieldElement) set(i uint) {
+// 	f[(i / 64)] |= 1 << (i & 63)
+// }
 
 // leftShift returns f times x^i.
 func (f fieldElement) leftShift(i uint) (result fieldElement) {
