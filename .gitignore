@@ -21,3 +21,5 @@
 Makefile
 doc
 vendor
+npad
+cmd/npad/npad
