@@ -1,4 +1,3 @@
-// package npad ...
 package npad
 
 // import

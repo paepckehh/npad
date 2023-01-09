@@ -1,7 +1,5 @@
-// package npad ...
 package npad
 
-// import
 import (
 	"crypto/sha512"
 	"encoding/base64"
