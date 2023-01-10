@@ -1,6 +1,6 @@
 # OVERVIEW
 
-[paepche.de/npad](https://paepcke.de/npad)
+[paepche.de/npad](https://paepcke.de/npad/)
 
 WebAPP to share, exchange and analyze secrets, keys, certificates and code in a secure way.
 
