@@ -38,6 +38,10 @@ WebAPP to share, exchange and analyze secrets, keys, certificates and code in a 
 - Yes, its an quick hack
 - No pre-build binaries, its build-time-configuration! 
 
+# DOCS
+
+[pkg.go.dev/paepcke.de/npad](https://pkg.go.dev/paepcke.de/npad)
+
 # CONTRIBUTION
 
 Yes, Please! PRs Welcome! 
