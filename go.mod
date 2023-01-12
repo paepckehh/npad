@@ -8,7 +8,7 @@ require (
 	paepcke.de/certinfo v0.1.15
 	paepcke.de/logsec v0.1.2
 	paepcke.de/reportstyle v0.1.4
-	paepcke.de/tlsinfo v0.1.12
+	paepcke.de/tlsinfo v0.1.14
 )
 
 require (
