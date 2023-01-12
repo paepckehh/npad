@@ -9,7 +9,7 @@ import (
 
 	"paepcke.de/npad/encrypt/gcmsiv"
 	// "github.com/paepckehh/contrib_agl_gcmsiv/v1"
-	// "github.com/ag/gcmsiv" needs upstream fix for 32 bit (embedded) os plattofrm support
+	// "github.com/agl/gcmsiv" needs upstream fix for 32 bit (embedded) os plattofrm support
 )
 
 // Encrypt ...
