@@ -1,5 +1,5 @@
 # OVERVIEW
-[![Go Report Card](https://goreportcard.com/badge/paepcke.de/npad)](https://goreportcard.com/report/paepcke.de/npad)
+[![Go Reference](https://pkg.go.dev/badge/paepcke.de/npad.svg)](https://pkg.go.dev/paepcke.de/npad) [![Go Report Card](https://goreportcard.com/badge/paepcke.de/npad)](https://goreportcard.com/report/paepcke.de/npad)
 
 [paepche.de/npad](https://paepcke.de/npad/)
 
