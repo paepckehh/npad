@@ -1,4 +1,5 @@
 # OVERVIEW
+[![Go Report Card](https://goreportcard.com/badge/paepcke.de/npad)](https://goreportcard.com/report/paepcke.de/npad)
 
 [paepche.de/npad](https://paepcke.de/npad/)
 
