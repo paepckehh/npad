@@ -1,7 +1,7 @@
 # OVERVIEW
 [![Go Reference](https://pkg.go.dev/badge/paepcke.de/npad.svg)](https://pkg.go.dev/paepcke.de/npad) [![Go Report Card](https://goreportcard.com/badge/paepcke.de/npad)](https://goreportcard.com/report/paepcke.de/npad) [![Go Build](https://github.com/paepckehh/npad/actions/workflows/golang.yml/badge.svg)](https://github.com/paepckehh/npad/actions/workflows/golang.yml)
 
-[paepche.de/npad](https://paepcke.de/npad/)
+[paepcke.de/npad](https://paepcke.de/npad/)
 
 WebAPP to share, exchange and analyze secrets, keys, certificates and code in a secure way.
 
