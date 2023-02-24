@@ -7,8 +7,8 @@ require (
 	mvdan.cc/xurls/v2 v2.4.0
 	paepcke.de/certinfo v0.1.22
 	paepcke.de/logsec v0.1.8
-	paepcke.de/reportstyle v0.1.10
-	paepcke.de/tlsinfo v0.1.20
+	paepcke.de/reportstyle v0.1.11
+	paepcke.de/tlsinfo v0.1.21
 )
 
 require (
