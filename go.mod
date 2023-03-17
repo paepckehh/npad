@@ -3,7 +3,7 @@ module paepcke.de/npad
 go 1.20
 
 require (
-	github.com/klauspost/compress v1.16.0
+	github.com/klauspost/compress v1.16.3
 	mvdan.cc/xurls/v2 v2.4.0
 	paepcke.de/certinfo v0.1.24
 	paepcke.de/logsec v0.1.11
