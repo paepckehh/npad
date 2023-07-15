@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/klauspost/compress v1.16.7
 	mvdan.cc/xurls/v2 v2.5.0
-	paepcke.de/certinfo v0.1.32
+	paepcke.de/certinfo v0.1.33
 	paepcke.de/logsec v0.1.19
 	paepcke.de/reportstyle v0.1.21
 	paepcke.de/tlsinfo v0.1.31
